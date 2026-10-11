@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>myYBS Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap">
+<style>
+/* Layout: presentation stage — phone centred on a dark stage, flow index on the left (drawer on phones) */
+:root{
+  --stage:#141113;        /* warm near-black, biased to the brand red */
+  --panel:#1d1a1c;
+  --line:#2e292c;
+  --ink:#f3eeee;
+  --muted:#9a8f92;
+  --brand:#e3161b;        /* YBS red */
+  --brand-deep:#9b1c0c;
+  --hot:rgba(227,22,27,.28);
+  --font:"Poppins",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--stage);color:var(--ink);font-family:var(--font);overflow:hidden}
+*{box-sizing:border-box}
+button{font:inherit;color:inherit}
+
+.app{display:grid;grid-template-columns:260px 1fr;height:100%}
+.side{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.brand{padding:20px 20px 14px;display:flex;flex-direction:column;gap:2px;border-bottom:1px solid var(--line)}
+.brand b{font-weight:600;font-size:16px;letter-spacing:.2px}
+.brand span{font-size:12px;color:var(--muted)}
+.flows{overflow-y:auto;padding:8px 0 24px;flex:1}
+.flows h3{font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:500;margin:16px 20px 6px}
+.flows button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:none;border:0;padding:7px 20px;font-size:13px;color:#d8d0d2;cursor:pointer}
+.flows button:hover{background:#262124}
+.flows button.on{color:#fff;background:#2a2023;box-shadow:inset 3px 0 0 var(--brand)}
+.flows button i{font-style:normal;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;width:18px}
+
+.stage{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;min-height:0}
+.toolbar{position:absolute;top:16px;left:16px;right:16px;display:flex;gap:8px;justify-content:space-between;align-items:center;z-index:5}
+.toolbar .grp{display:flex;gap:8px;align-items:center}
+.tb{background:#231f21;border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:12.5px;cursor:pointer;display:flex;gap:6px;align-items:center}
+.tb:hover{border-color:#4a3f43}
+.tb[aria-pressed="true"]{border-color:var(--brand);color:#fff}
+.tb:focus-visible,.flows button:focus-visible,.hs:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.crumb{font-size:12.5px;color:var(--muted)}
+.crumb b{color:var(--ink);font-weight:500}
+.menuBtn{display:none}
+.hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:12px;color:var(--muted)}
+.hint kbd{font-family:inherit;border:1px solid var(--line);border-radius:4px;padding:0 5px;color:#cfc6c8}
+
+/* device */
+.device{position:relative;width:395px;height:832px;border-radius:56px;background:#0b0a0b;padding:10px;box-shadow:0 0 0 1px #3a3336,0 30px 80px rgba(0,0,0,.55);transform-origin:0 0;position:absolute;top:0;left:0}
+.devwrap{position:relative;flex:none}
+.viewport{position:relative;width:375px;height:812px;border-radius:46px;overflow:hidden;background:#fafafa;isolation:isolate}
+.screen{position:absolute;inset:0;overflow:hidden;background:#fafafa;will-change:transform}
+.scroll{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+.canvas{position:relative;width:375px}
+.canvas img{display:block;width:375px;max-width:none;user-select:none;-webkit-user-drag:none}
+.fixed{position:absolute;left:0;right:0;z-index:3}
+.hs{position:absolute;cursor:pointer;border-radius:10px;background:transparent;border:0;padding:0;transition:background .25s}
+.show-hs .hs,.flash .hs{background:var(--hot);box-shadow:inset 0 0 0 1.5px rgba(227,22,27,.7)}
+.flash .hs{animation:fl .7s ease}
+@keyframes fl{0%,100%{background:transparent;box-shadow:none}30%{background:var(--hot);box-shadow:inset 0 0 0 1.5px rgba(227,22,27,.7)}}
+
+/* toggles drawn over the design's own switches */
+.tg{position:absolute;border-radius:999px;background:#e4e4e4;cursor:pointer;border:0;padding:0;transition:background .2s}
+.tg::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .22s cubic-bezier(.3,.7,.4,1)}
+.tg.on{background:linear-gradient(110deg,var(--brand),var(--brand-deep))}
+.tg.on::after{transform:translateX(var(--d))}
+
+/* PIN + reveal overlays */
+.pin-dot{position:absolute;width:40px;height:40px;border-radius:8px;display:grid;place-items:center;pointer-events:none}
+.pin-dot.f::after{content:"";width:12px;height:12px;border-radius:50%;background:var(--brand)}
+.key{position:absolute;width:66px;height:66px;border-radius:50%;cursor:pointer;border:0;background:transparent;transition:background .15s}
+.key:active{background:rgba(227,22,27,.18)}
+.reveal{position:absolute;background:#fff;font:400 15px/1 var(--font);color:#444;letter-spacing:2px;padding:2px 0;pointer-events:none}
+.cover{position:absolute;pointer-events:none}
+
+.toast{position:absolute;left:50%;bottom:110px;transform:translate(-50%,20px);background:rgba(30,26,28,.94);color:#fff;font-size:13px;padding:10px 16px;border-radius:12px;opacity:0;transition:all .3s;pointer-events:none;z-index:20;white-space:nowrap}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (max-width:820px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;inset:0 30% 0 0;z-index:30;transform:translateX(-105%);transition:transform .3s;min-width:240px}
+  .side.open{transform:none;box-shadow:20px 0 60px rgba(0,0,0,.5)}
+  .menuBtn{display:flex}
+  .hint{display:none}
+  .crumb{display:none}
+}
+@media (prefers-reduced-motion:reduce){.screen{transition:none!important}.tg::after{transition:none}}
+</style>
+
+<div class="app">
+  <aside class="side" id="side" aria-label="Screens">
+    <div class="brand"><b>myYBS Mobile</b><span>Clickable prototype · 66 screens</span></div>
+    <nav class="flows" id="flows"></nav>
+  </aside>
+  <main class="stage" id="stage">
+    <div class="toolbar">
+      <div class="grp">
+        <button class="tb menuBtn" id="menuBtn" aria-label="Open screen list">☰ Screens</button>
+        <span class="crumb" id="crumb"></span>
+      </div>
+      <div class="grp">
+        <button class="tb" id="backBtn" title="Back (Backspace)">← Back</button>
+        <button class="tb" id="hsBtn" aria-pressed="false" title="Show hotspots (H)">Hotspots</button>
+        <button class="tb" id="restartBtn" title="Restart (R)">Restart</button>
+      </div>
+    </div>
+    <div class="devwrap" id="devwrap"><div class="device" id="device"><div class="viewport" id="vp"><div class="toast" id="toast"></div></div></div></div>
+    <div class="hint">Click anywhere to reveal tappable areas · <kbd>H</kbd> hotspots · <kbd>⌫</kbd> back · <kbd>R</kbd> restart</div>
+  </main>
+</div>
+
+<script>
+// ---------- state ----------
+const S={home:'8-1555',flow:'signup',pin:'',hasCard:true};
+const NAV=[[0,727,94,85,'tab:home'],[94,727,93,85,'tab:20-2770'],[187,727,94,85,'tab:20-2388'],[281,727,94,85,'tab:profile']];
+const BACK=[14,45,46,46,'back'];
+const BTN=(to,o)=>[16,730,343,48,to,o];
+const homeHS=(extra=[])=>[
+  [325,42,44,44,'20-6558'],
+  [17,100,272,145,'26-2530'],[228,106,58,52,'112-3497','fade'],[300,100,75,145,'26-2530'],
+  [60,290,64,90,'toast:Top Up is not designed yet'],[155,290,64,90,'17-551'],[250,290,70,90,'147-4276'],
+  ...extra,...NAV];
+const pinKeys=(next)=>({pin:{next}});
+
+// screens: img, h (image height), view (visible height when cropped), hs hotspots [x,y,w,h,target,transition]
+const SCREENS={
+ 'splash1':{n:'Splash',img:'splash1',auto:['splash2',900,'fade']},
+ 'splash2':{n:'Splash · logo',img:'splash2',auto:['onb1',1500,'fade']},
+ 'onb1':{n:'Manage your card',img:'onb1',swipe:[null,'onb2'],hs:[[0,60,375,520,'onb2','fade'],[17,633,162,44,'go-login'],[197,633,162,44,'go-signup']]},
+ 'onb2':{n:'Check balance',img:'onb2',swipe:['onb1','onb3'],hs:[[0,60,375,520,'onb3','fade'],[17,633,162,44,'go-login'],[197,633,162,44,'go-signup']]},
+ 'onb3':{n:'Pay bills',img:'onb3',swipe:['onb2','onb4'],hs:[[0,60,375,520,'onb4','fade'],[17,633,162,44,'go-login'],[197,633,162,44,'go-signup']]},
+ 'onb4':{n:'View statement',img:'onb4',swipe:['onb3',null],hs:[[0,60,375,520,'go-login'],[17,633,162,44,'go-login'],[197,633,162,44,'go-signup']]},
+ 'login':{n:'Log in',img:'login',hs:[[326,82,44,44,'back'],[14,398,134,30,'go-reset'],[16,452,343,44,'enter-home'],[16,579,343,44,'enter-home'],[232,648,64,28,'go-signup']]},
+ 'signup':{n:'Sign up',img:'signup',hs:[[326,82,44,44,'back'],[180,370,52,26,'go-login'],[270,622,70,24,'20-4720'],[134,648,112,24,'20-4720'],BTN('otp')]},
+ 'otp':{n:'Verification code',img:'otp',hs:[[328,62,44,44,'back'],BTN('otp-next')]},
+ 'newpass':{n:'Create new password',img:'newpass',hs:[[328,76,44,44,'back'],BTN('newpass-next')]},
+ 'biometric':{n:'Enable biometric',img:'biometric',hs:[[15,567,344,44,'notif'],[140,630,95,34,'notif']]},
+ 'notif':{n:'Enable notification',img:'notif',hs:[[15,567,344,44,'enter-new'],[140,630,95,34,'enter-new']]},
+
+ '8-1555':{n:'Home',img:'8-1555',hs:homeHS([[300,398,64,28,'20-6655'],[16,436,343,290,'20-6655']])},
+ '292-4433':{n:'Home · service tiles',img:'292-4433',hs:[[325,42,44,44,'20-6558'],[17,100,272,145,'26-2530'],[17,286,76,95,'toast:Top Up is not designed yet'],[106,286,76,95,'17-551'],[194,286,76,95,'17-551'],[282,286,76,95,'147-4276'],[300,398,64,28,'20-6655'],...NAV]},
+ '18-822':{n:'Home · new card',img:'18-822',hs:homeHS([[300,398,64,28,'20-6655']])},
+ '185-4093':{n:'Home · no card',img:'185-4093',hs:[[325,42,44,44,'20-6558'],[16,115,345,145,'23-2489'],[60,290,64,90,'toast:Add a card first'],[155,290,64,90,'toast:Add a card first'],[250,290,70,90,'toast:Add a card first'],...NAV]},
+ '20-6558':{n:'Notifications',img:'20-6558',hs:[BACK]},
+ '20-6655':{n:'Recent transactions',img:'20-6655',hs:[BACK]},
+
+ '17-551':{n:'Send · amount',img:'17-551',hs:[BACK,BTN('18-1161')]},
+ '18-1161':{n:'Send · contact access',img:'18-1161',hs:[BACK,[16,228,343,66,'20-1727'],[16,170,343,34,'20-3606']]},
+ '20-3606':{n:'Send · no contacts',img:'20-3606',hs:[BACK,[16,629,343,44,'toast:Invite sent'],[16,691,343,44,'toast:Invite link copied']]},
+ '20-1727':{n:'Send · choose recipient',img:'20-1727',hs:[BACK,[330,50,36,36,'20-1863'],[262,676,94,26,'back'],BTN('18-1884')]},
+ '20-1863':{n:'Send · account number',img:'20-1863',hs:[BACK,[16,257,343,44,'20-2315','none'],[16,384,343,252,'96-7642','fade'],[262,676,94,26,'17-551'],BTN('toast:Enter an account number or generate a QR')]},
+ '20-2315':{n:'Send · valid account',img:'20-2315',hs:[BACK,[16,255,343,44,'20-2242','none'],[16,384,343,252,'96-7642','fade'],[262,676,94,26,'17-551'],BTN('18-1884')]},
+ '20-2242':{n:'Send · invalid account',img:'20-2242',hs:[BACK,[16,257,343,44,'20-2315','none'],[262,676,94,26,'17-551'],BTN('toast:This account number doesn’t exist')]},
+ '96-7642':{n:'Send · QR generated',img:'96-7642',hs:[BACK,[16,257,343,44,'20-2315','none'],[150,588,80,26,'toast:QR code shared'],[262,676,94,26,'17-551'],BTN('18-1884')]},
+ '18-1884':{n:'Send · success',img:'18-1884',hs:[[6,42,40,40,'tab:home'],[16,503,343,44,'tab:home']]},
+
+ '147-4276':{n:'Bill pay · empty',img:'147-4276',h:880,view:812,hs:[BACK,[16,190,292,44,'94-5990','none'],[314,188,48,48,'20-2215','up'],BTN('toast:Pick a billing month or scan the bill QR')]},
+ '94-5990':{n:'Bill pay · by date',img:'94-5990',h:880,view:812,hs:[BACK,[16,190,292,44,'147-4276','none'],[314,188,48,48,'20-2215','up'],BTN('26-3003')]},
+ '94-6706':{n:'Bill pay · by QR',img:'94-6706',h:880,view:812,hs:[BACK,[16,190,292,44,'94-5990','none'],[314,188,48,48,'20-2215','up'],BTN('26-3003')]},
+ '20-2215':{n:'Scan bill QR',img:'20-2215',auto:['scan-done',2600,'fade'],hs:[[8,40,36,36,'back'],[100,330,175,150,'scan-done']]},
+ '26-3003':{n:'Bill pay · success',img:'26-3003',hs:[[6,42,40,40,'tab:home'],[16,503,343,44,'tab:home']]},
+
+ '20-2770':{n:'Map services',img:'20-2770',hs:[[60,248,48,58,'101-2783','up'],[158,298,46,54,'101-2783','up'],[252,254,46,54,'101-2783','up'],[318,569,40,40,'toast:Centred on your location'],...NAV]},
+ '101-2783':{n:'Map · agent',img:'101-2783',hs:[[18,94,44,28,'back'],[0,648,375,164,'101-3036','none'],[0,139,375,500,'back']]},
+ '101-3036':{n:'Map · agent details',img:'101-3036',hs:[[18,94,44,28,'tab:20-2770'],[0,527,375,40,'back'],[0,139,375,385,'tab:20-2770'],[16,700,343,40,'toast:Calling 693 256 3696'],[16,748,343,44,'toast:Email copied']]},
+
+ '20-2388':{n:'Recipients',img:'20-2388',hs:[[330,50,36,36,'20-1863'],[280,198,66,32,'17-551'],[280,275,66,32,'17-551'],[280,351,66,32,'17-551'],...NAV]},
+
+ 'profile':{n:'Profile',custom:'profile'},
+ '20-4793':{n:'Basic information',img:'20-4793',h:1064,covers:[[110,794,155,12,'#fafafa']],hs:[BACK]},
+ '99-2776':{n:'Basic info · expired passport',img:'99-2776',h:1064,hs:[BACK,[180,828,160,22,'toast:Passport editing is not designed yet']]},
+ '20-4156':{n:'Password & security',img:'20-4156',toggles:[[307,313,52,32,1],[307,404,52,32,0]],hs:[BACK,[330,152,40,40,'20-4621'],[16,157,300,78,'20-4621']]},
+ '20-4621':{n:'Change password',img:'20-4621',hs:[BACK,BTN('pass-updated')]},
+ '20-4720':{n:'Privacy policy',img:'20-4720',hs:[BACK]},
+
+ '20-6958':{n:'My accounts',img:'20-6958',hs:[BACK,[17,146,340,169,'26-2530'],[17,333,340,169,'26-2530'],[16,520,343,169,'26-2530'],BTN('23-2489')]},
+ '26-2530':{n:'Card details',img:'26-2530',toggles:[[303,411,56,32,0]],reveal:[[242,296,104,30,[28,308,60,20],'482'],[242,350,104,30,[28,364,60,20],'7319']],hs:[BACK,[188,149,170,32,'112-3116','none'],[292,222,58,58,'112-3497','fade']]},
+ '112-3616':{n:'Card details · alt',img:'112-3616',toggles:[[303,408,56,32,0]],hs:[BACK,[188,149,170,32,'112-3116','none'],[292,222,58,58,'112-3497','fade']]},
+ '112-3116':{n:'Card transactions',img:'112-3116',hs:[BACK,[17,149,170,32,'back-none']]},
+ '112-3497':{n:'Card QR code',img:'112-3497',hs:[[0,0,375,518,'back'],[308,536,38,38,'back']]},
+
+ '23-2489':{n:'Virtual card · intro',img:'23-2489',hs:[BACK,[110,604,155,28,'toast:Instructions are not designed yet'],BTN('23-2732')]},
+ '23-2732':{n:'Virtual card · personal',img:'23-2732',hs:[BACK,BTN('23-2792')]},
+ '23-2792':{n:'Virtual card · address',img:'23-2792',hs:[BACK,BTN('23-2958')]},
+ '23-2958':{n:'Virtual card · phone',img:'23-2958',hs:[BACK,[316,330,40,26,'toast:Phone editing is not designed yet'],BTN('23-3048')]},
+ '23-3048':{n:'Virtual card · email',img:'23-3048',hs:[BACK,BTN('23-3120')]},
+ '23-3120':{n:'Virtual card · citizenship',img:'23-3120',hs:[BACK,[0,222,375,38,'23-3274'],[0,274,375,38,'23-3316'],BTN('23-3316')]},
+ '23-3316':{n:'Virtual card · country',img:'23-3316',hs:[[12,56,40,34,'back'],BTN('23-3274')]},
+ '23-3274':{n:'Virtual card · ID info',img:'23-3274',hs:[BACK,BTN('23-3931')]},
+ '23-3931':{n:'Upload ID · intro',img:'23-3931',hs:[BACK,BTN('26-1815','up')]},
+ '26-1815':{n:'Upload ID · choose type',img:'26-1815',hs:[[16,580,343,46,'26-1892'],[16,630,343,48,'26-1892'],[16,682,343,52,'26-1892'],[16,750,343,42,'back'],[0,0,375,520,'back']]},
+ '26-1892':{n:'Camera · passport',img:'26-1892',hs:[[170,44,36,30,'back'],[168,750,40,40,'26-1953','fade']]},
+ '26-1953':{n:'Upload passport',img:'26-1953',hs:[BACK,[15,567,344,44,'23-4043'],[125,636,125,32,'back']]},
+ '23-4043':{n:'Verify identity',img:'23-4043',hs:[BACK,BTN('26-2157','up')]},
+ '26-2157':{n:'Camera · face',img:'26-2157',hs:[[8,44,36,30,'back'],[168,750,40,40,'26-3272','fade']]},
+ '26-3272':{n:'Verifying identity',img:'26-3272',auto:['26-2175',2400,'fade'],hs:[BACK]},
+ '26-2175':{n:'Your card is ready',img:'26-2175',hs:[BTN('112-2424')]},
+ '112-2424':{n:'Set PIN',img:'112-2424',pin:'112-2710',hs:[BACK]},
+ '112-2710':{n:'Re-enter PIN',img:'112-2710',pin:'pin-done',hs:[BACK]},
+ '176-3928':{n:'Add card number',img:'176-3928',hs:[BACK,BTN('112-2424')]},
+};
+
+const GROUPS=[
+ ['Onboarding',['splash1','splash2','onb1','onb2','onb3','onb4']],
+ ['Account',['login','signup','otp','newpass','biometric','notif']],
+ ['Home',['8-1555','292-4433','185-4093','18-822','20-6558','20-6655']],
+ ['Send money',['17-551','18-1161','20-3606','20-1727','20-1863','20-2315','20-2242','96-7642','18-1884']],
+ ['Bill pay',['147-4276','94-5990','94-6706','20-2215','26-3003']],
+ ['Map services',['20-2770','101-2783','101-3036']],
+ ['Recipients',['20-2388']],
+ ['Profile',['profile','20-4793','99-2776','20-4156','20-4621','20-4720']],
+ ['Cards',['20-6958','26-2530','112-3616','112-3116','112-3497','176-3928']],
+ ['New virtual card',['23-2489','23-2732','23-2792','23-2958','23-3048','23-3120','23-3316','23-3274','23-3931','26-1815','26-1892','26-1953','23-4043','26-2157','26-3272','26-2175','112-2424','112-2710']],
+];
+const TABS=['8-1555','292-4433','18-822','185-4093','20-2770','20-2388','profile'];
+
+// ---------- rendering ----------
+const vp=document.getElementById('vp');
+let stack=[],cur=null,autoT=null,busy=false;
+
+function el(tag,cls,css){const e=document.createElement(tag);if(cls)e.className=cls;if(css)Object.assign(e.style,css);return e}
+function px(a){return{left:a[0]+'px',top:a[1]+'px',width:a[2]+'px',height:a[3]+'px'}}
+
+function hotspot(parent,h){
+  const b=el('button','hs',px(h));b.setAttribute('aria-label',label(h[4]));
+  b.addEventListener('click',e=>{e.stopPropagation();act(h[4],h[5])});parent.appendChild(b);
+}
+function label(t){return t.startsWith('toast:')?t.slice(6):(SCREENS[t.replace('tab:','')]?.n||t)}
+
+function build(id){
+  const d=SCREENS[id],scr=el('div','screen');
+  if(d.custom==='profile') return buildProfile(scr);
+  const view=d.view||812,h=d.h||812;
+  const sc=el('div',h>view&&!d.view?'scroll':'');
+  if(!sc.className)Object.assign(sc.style,{position:'absolute',inset:0,overflow:'hidden'});
+  const cv=el('div','canvas',{height:h+'px'});
+  const im=el('img');im.src='screens/'+d.img+'.png';im.alt=d.n;im.draggable=false;cv.appendChild(im);
+  (d.covers||[]).forEach(c=>cv.appendChild(el('div','cover',{...px(c),background:c[4]})));
+  (d.toggles||[]).forEach(t=>toggle(cv,t));
+  (d.reveal||[]).forEach(r=>{
+    const out=el('div','reveal',px(r[2]));out.hidden=true;out.textContent=r[3];cv.appendChild(out);
+    const b=el('button','hs',px(r));b.setAttribute('aria-label','Show code');
+    b.onclick=e=>{e.stopPropagation();out.hidden=!out.hidden};cv.appendChild(b);
+  });
+  if(d.pin) buildPin(cv,d.pin);
+  (d.hs||[]).forEach(hh=>{
+    // nav bar + back hotspots stay put on scrolling screens
+    hotspot(cv,hh);
+  });
+  sc.appendChild(cv);scr.appendChild(sc);
+  if(d.swipe) swipe(scr,d.swipe);
+  return scr;
+}
+function toggle(parent,t){
+  const b=el('button','tg'+(t[4]?' on':''),px(t));b.style.setProperty('--d',(t[2]-32)+'px');
+  b.setAttribute('role','switch');b.setAttribute('aria-checked',!!t[4]);
+  b.onclick=e=>{e.stopPropagation();b.classList.toggle('on');b.setAttribute('aria-checked',b.classList.contains('on'))};
+  parent.appendChild(b);
+}
+function buildPin(cv,next){
+  S.pin='';const dots=[66,134,202,270].map(x=>{const d=el('div','pin-dot',{left:x+'px',top:'224px'});cv.appendChild(d);return d});
+  const paint=()=>dots.forEach((d,i)=>d.classList.toggle('f',i<S.pin.length));
+  const cols=[61,155,249],rows=[388,482,576,670];
+  const keys=[['1',0,0],['2',1,0],['3',2,0],['4',0,1],['5',1,1],['6',2,1],['7',0,2],['8',1,2],['9',2,2],['0',1,3],['go',2,3]];
+  keys.forEach(([k,c,r])=>{
+    const b=el('button','key',{left:cols[c]+'px',top:rows[r]+'px'});b.setAttribute('aria-label',k==='go'?'Continue':k);
+    b.onclick=e=>{e.stopPropagation();
+      if(k==='go'){ if(S.pin.length===4) act(next); else toast('Enter all 4 digits'); return }
+      if(S.pin.length<4){S.pin+=k;paint(); if(S.pin.length===4) setTimeout(()=>act(next),350)}
+    };cv.appendChild(b);
+  });
+}
+function buildProfile(scr){
+  const sc=el('div','scroll');const cv=el('div','canvas',{height:(117+805+90)+'px',background:'#fafafa'});
+  const top=el('div','',{position:'absolute',left:0,top:0,width:'375px',height:'117px',background:"url(screens/20-3785.png) 0 0/375px 1002px no-repeat"});
+  const body=el('img');body.src='screens/profile-body.png';body.alt='Profile';Object.assign(body.style,{position:'absolute',top:'117px',left:0});
+  cv.append(top,body);
+  toggle(cv,[307,209,52,32,0]);
+  [[0,155,375,42,'20-4793'],[0,259,375,42,'20-6958'],[0,371,375,42,'20-4156'],[0,472,375,42,'toast:Only English is available in this prototype'],
+   [0,574,375,42,'toast:Customer service is not designed yet'],[0,622,375,42,'toast:Share sheet would open here'],
+   [0,724,375,42,'20-4720'],[0,770,375,42,'20-4720'],[140,844,96,32,'logout']].forEach(h=>hotspot(cv,h));
+  sc.appendChild(cv);scr.appendChild(sc);
+  const nav=el('div','fixed',{bottom:0,height:'85px',background:"url(screens/20-3785.png) 0 -726px/375px 1002px no-repeat"});
+  NAV.forEach(n=>hotspot(nav,[n[0],0,n[2],n[3],n[4]]));
+  scr.appendChild(nav);
+  scr.appendChild(el('div','fixed',{bottom:'8px',left:'121px',right:'121px',height:'5px',borderRadius:'3px',background:'#000'}));
+  return scr;
+}
+function swipe(scr,[prev,next]){
+  let x0=null;
+  scr.addEventListener('pointerdown',e=>{x0=e.clientX});
+  scr.addEventListener('pointerup',e=>{if(x0==null)return;const dx=e.clientX-x0;x0=null;
+    if(dx<-50&&next)go(next,'push');else if(dx>50&&prev)go(prev,'pop')});
+}
+
+// ---------- navigation ----------
+function act(t,tr){
+  if(t.startsWith('toast:'))return toast(t.slice(6));
+  if(t.startsWith('tab:')){let id=t.slice(4);if(id==='home')id=S.home;return reset(id,'none')}
+  switch(t){
+    case 'back':return back();
+    case 'back-none':return back('none');
+    case 'go-login':S.flow='login';return go('login');
+    case 'go-signup':S.flow='signup';return go('signup');
+    case 'go-reset':S.flow='reset';return go('otp');
+    case 'otp-next':return go('newpass');
+    case 'newpass-next':if(S.flow==='reset'){toast('Password changed. Log in with your new password');return reset('login','pop')}return go('biometric');
+    case 'enter-home':S.home='8-1555';return reset(S.home);
+    case 'enter-new':S.home='185-4093';return reset(S.home);
+    case 'scan-done':stack.pop();return go('94-6706','fade',true);
+    case 'pass-updated':toast('Password updated');return back();
+    case 'pin-done':S.home='18-822';toast('Your virtual card is active');return reset('18-822');
+    case 'logout':return reset('onb1');
+  }
+  go(t,tr||'push');
+}
+function reset(id,tr='fade'){stack=[];go(id,tr,true)}
+function go(id,tr='push',noPush){
+  if(!SCREENS[id]||busy)return;
+  if(cur&&!noPush)stack.push({id:cur,tr});
+  show(id,tr);
+}
+function back(tr){
+  if(!stack.length)return;
+  const p=stack.pop();show(p.id,tr||({push:'pop',up:'down',fade:'fade',none:'none'}[p.tr]||'pop'));
+}
+const TR={push:['translateX(100%)','translateX(-28%)'],pop:['translateX(-28%)','translateX(100%)'],up:['translateY(100%)','none'],down:['none','translateY(100%)'],fade:['opacity','opacity'],none:null};
+function show(id,tr){
+  clearTimeout(autoT);
+  const old=vp.querySelector('.screen'),nw=build(id);
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  vp.insertBefore(nw,document.getElementById('toast'));
+  cur=id;sync();
+  if(!old){}else if(reduce||!TR[tr]){old.remove()}
+  else{
+    busy=true;const dur=320,ease='cubic-bezier(.32,.72,0,1)';
+    if(tr==='fade'){nw.style.opacity=0;nw.animate([{opacity:0},{opacity:1}],{duration:260,fill:'forwards'}).onfinish=()=>{nw.style.opacity=1;old.remove();busy=false}}
+    else{
+      const [a,b]=TR[tr];
+      if(tr==='pop'||tr==='down'){old.style.zIndex=2}
+      if(a!=='none')nw.animate([{transform:a},{transform:'none'}],{duration:dur,easing:ease});
+      const oa=old.animate([{transform:'none'},{transform:b==='none'?'none':b}],{duration:dur,easing:ease,fill:'forwards'});
+      if(tr==='up')old.animate([{filter:'brightness(1)'},{filter:'brightness(.75)'}],{duration:dur,fill:'forwards'});
+      oa.onfinish=()=>{old.remove();busy=false};
+    }
+  }
+  const d=SCREENS[id];
+  if(d.auto)autoT=setTimeout(()=>{if(cur!==id)return;const a=d.auto[0];if(SCREENS[a]){stack=stack.slice(0);go(a,d.auto[2],true)}else act(a)},d.auto[1]);
+  try{history.replaceState(null,'','#'+id.replace(/[^\w.~-]/g,''))}catch(e){}
+}
+
+// ---------- chrome ----------
+const flows=document.getElementById('flows');let count=0;
+GROUPS.forEach(([g,ids])=>{
+  const h=el('h3');h.textContent=g;flows.appendChild(h);
+  ids.forEach(id=>{count++;const b=el('button');b.dataset.id=id;b.innerHTML=`<i>${String(count).padStart(2,'0')}</i><span></span>`;b.querySelector('span').textContent=SCREENS[id].n;
+    b.onclick=()=>{reset(id);document.getElementById('side').classList.remove('open')};flows.appendChild(b)});
+});
+function sync(){
+  flows.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.id===cur));
+  const on=flows.querySelector('button.on');on&&on.scrollIntoView({block:'nearest'});
+  const g=GROUPS.find(x=>x[1].includes(cur));
+  document.getElementById('crumb').innerHTML=`${g?g[0]:''} / <b></b>`;document.querySelector('#crumb b').textContent=SCREENS[cur].n;
+  document.getElementById('backBtn').disabled=!stack.length;document.getElementById('backBtn').style.opacity=stack.length?1:.4;
+}
+let tt;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2000)}
+
+vp.addEventListener('click',()=>{if(vp.classList.contains('show-hs'))return;vp.classList.remove('flash');void vp.offsetWidth;vp.classList.add('flash')});
+vp.addEventListener('animationend',()=>vp.classList.remove('flash'));
+const hsBtn=document.getElementById('hsBtn');
+function setHS(v){vp.classList.toggle('show-hs',v);hsBtn.setAttribute('aria-pressed',v)}
+hsBtn.onclick=()=>setHS(!vp.classList.contains('show-hs'));
+document.getElementById('backBtn').onclick=()=>back();
+document.getElementById('restartBtn').onclick=()=>{S.home='8-1555';reset('splash1')};
+document.getElementById('menuBtn').onclick=()=>document.getElementById('side').classList.toggle('open');
+addEventListener('keydown',e=>{
+  if(e.target.closest&&e.target.closest('input,textarea'))return;
+  if(e.key==='Backspace'||e.key==='ArrowLeft'&&e.altKey){e.preventDefault();back()}
+  else if(e.key==='h'||e.key==='H')setHS(!vp.classList.contains('show-hs'));
+  else if(e.key==='r'||e.key==='R')document.getElementById('restartBtn').click();
+});
+
+// fit the device to the stage
+const dev=document.getElementById('device'),stage=document.getElementById('stage');
+const wrap=document.getElementById('devwrap');
+function fit(){const top=innerWidth>820?120:72;const w=stage.clientWidth-24,h=stage.clientHeight-top;const s=Math.max(.3,Math.min(1.05,w/395,h/832));
+  dev.style.transform=`scale(${s})`;wrap.style.width=395*s+'px';wrap.style.height=832*s+'px';wrap.style.marginTop=(innerWidth>820?0:48)+'px'}
+addEventListener('resize',fit);fit();
+
+// preload images
+Object.values(SCREENS).forEach(d=>{if(d.img){const i=new Image();i.src='screens/'+d.img+'.png'}});
+const start=(location.hash||'').slice(1);
+reset(SCREENS[start]?start:'splash1','none');
+</script>

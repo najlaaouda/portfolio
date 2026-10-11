@@ -1,0 +1,148 @@
+# Admin panel config (Sveltia CMS, Decap-compatible).
+# Open /admin on the live site, sign in with GitHub, and every save becomes a commit
+# that rebuilds the site. Locally: `npm run dev`, open http://localhost:4321/admin,
+# choose "Work with Local Repository" and pick this folder.
+
+backend:
+  name: github
+  repo: najlaaouda/portfolio   # change if the GitHub repo has a different name
+  branch: main
+
+media_folder: public/images
+public_folder: /images
+
+collections:
+  - name: projects
+    label: Projects
+    label_singular: Project
+    folder: src/content/projects
+    path: "{{slug}}/index"
+    media_folder: /public/images/projects
+    public_folder: /images/projects
+    create: true
+    extension: md
+    format: frontmatter
+    summary: "{{title}} · {{year}}"
+    sortable_fields: [order, year, title]
+    fields:
+      - { name: title, label: Title, widget: string }
+      - { name: summary, label: One-line summary, widget: string, hint: "Shown on the card and under the title. Keep it short and concrete." }
+      - { name: outcome, label: What changed (result), widget: string, required: false, hint: "One measurable result, e.g. Checkout time down from 4 to 2 minutes." }
+      - { name: cover, label: Cover image, widget: image, hint: "1600 × 1000 or larger, WebP or JPG." }
+      - { name: year, label: Year, widget: number, value_type: int }
+      - { name: role, label: My role, widget: string, default: UX/UI Designer }
+      - { name: timeline, label: Timeline, widget: string, required: false, hint: "e.g. 8 weeks" }
+      - { name: platform, label: Platform, widget: string, required: false, hint: "e.g. iOS · Android · Web" }
+      - { name: tags, label: Tags, widget: list, default: [] }
+      - { name: tools, label: Tools, widget: list, default: [Figma] }
+      - { name: featured, label: Show on homepage, widget: boolean, default: true }
+      - { name: order, label: Order on homepage, widget: number, value_type: int, default: 10, hint: "1 shows first." }
+      - { name: draft, label: Draft (hidden from site), widget: boolean, default: false }
+      - { name: brand, label: Brand colour, widget: color, allowInput: true, required: false, hint: "The project's main colour, e.g. #1D2089. Used for its plate and case study header." }
+      - { name: device, label: Device, widget: select, options: [mobile, web], default: mobile }
+      - { name: showcase, label: Homepage showcase screens, widget: list, required: false, field: { name: image, label: Screen, widget: image }, hint: "4 to 6 screens that move inside the homepage plate. Leave empty to use the first gallery screens." }
+      - name: screens
+        label: Screen gallery
+        label_singular: Screen group
+        widget: list
+        required: false
+        hint: "Groups of phone or web screens, e.g. Sign in, Orders, Shipments."
+        fields:
+          - { name: title, label: Group title, widget: string }
+          - { name: note, label: Short note, widget: string, required: false }
+          - { name: images, label: Screens, widget: list, field: { name: image, label: Screen, widget: image } }
+      - name: links
+        label: Links
+        widget: object
+        fields:
+          - { name: prototype, label: Prototype, widget: string, required: false }
+          - { name: figma, label: Figma, widget: string, required: false }
+          - { name: behance, label: Behance, widget: string, required: false }
+          - { name: live, label: Live site, widget: string, required: false }
+      - name: body
+        label: Case study
+        widget: markdown
+        default: |
+          ## Overview
+
+          ## The problem
+
+          ## Research and flows
+
+          ## Wireframes
+
+          ## Final UI
+
+          ## Outcome
+
+  - name: settings
+    label: Site settings
+    editor: { preview: false }
+    files:
+      - name: site
+        label: Profile and homepage
+        file: src/data/site.json
+        format: json
+        fields:
+          - { name: name, label: Name, widget: string }
+          - { name: role, label: Role, widget: string }
+          - { name: available, label: Show "available" badge, widget: boolean }
+          - { name: availableText, label: Badge text, widget: string }
+          - { name: heroTitle, label: Hero title, widget: string }
+          - { name: heroAccent, label: Hero title (coloured part), widget: string }
+          - { name: heroText, label: Hero text, widget: text }
+          - { name: stack, label: Tools under hero, widget: list }
+          - { name: about, label: About text, widget: text }
+          - name: process
+            label: Process steps
+            widget: list
+            fields:
+              - { name: title, label: Title, widget: string }
+              - { name: text, label: Text, widget: text }
+              - { name: outputs, label: Outputs, widget: list }
+          - name: services
+            label: Services
+            widget: list
+            fields:
+              - { name: label, label: Small label, widget: string, hint: "e.g. UX Flow" }
+              - { name: specimen, label: Mini preview, widget: select, options: [ai, flow, ui, ds, code, motion] }
+              - { name: title, label: Title, widget: string }
+              - { name: text, label: Text, widget: text }
+              - { name: deliverables, label: Deliverables, widget: list }
+          - { name: servicesNote, label: Note under services, widget: string, required: false }
+          - { name: marquee, label: Moving text band, widget: list, required: false }
+          - name: reviews
+            label: Review platforms (rating badges)
+            widget: list
+            required: false
+            fields:
+              - { name: platform, label: Platform, widget: string }
+              - { name: rating, label: Rating, widget: string, hint: "e.g. 5.0" }
+              - { name: count, label: Number of reviews, widget: number }
+              - { name: url, label: Profile URL, widget: string }
+          - name: testimonials
+            label: Testimonials
+            widget: list
+            required: false
+            fields:
+              - { name: quote, label: Quote, widget: text }
+              - { name: name, label: Name, widget: string }
+              - { name: role, label: Role / company, widget: string, required: false }
+              - { name: lang, label: Language, widget: select, options: [en, ar], required: false }
+          - name: contact
+            label: Contact
+            widget: object
+            fields:
+              - { name: headline, label: Headline, widget: string }
+              - { name: text, label: Text, widget: string }
+              - { name: email, label: Email, widget: string, required: false }
+              - { name: whatsapp, label: WhatsApp number (with country code), widget: string, required: false }
+              - { name: cv, label: CV (PDF), widget: file, required: false }
+          - name: socials
+            label: Social links
+            widget: object
+            fields:
+              - { name: behance, label: Behance, widget: string, required: false }
+              - { name: linkedin, label: LinkedIn, widget: string, required: false }
+              - { name: github, label: GitHub, widget: string, required: false }
+              - { name: dribbble, label: Dribbble, widget: string, required: false }

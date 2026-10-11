@@ -1,0 +1,38 @@
+---
+import site from '../data/site.json';
+const socials = Object.entries(site.socials).filter(([, url]) => url);
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <span class="label">© {year} {site.name} · {site.role}</span>
+      {socials.length > 0 && (
+        <ul>
+          {socials.map(([name, url]) => (
+            <li><a href={url} target="_blank" rel="noopener">{name} ↗</a></li>
+          ))}
+        </ul>
+      )}
+      <a class="label top" href="#top" data-magnetic="0.4">Back to top ↑</a>
+    </div>
+  </div>
+  <p class="giant" aria-hidden="true">najlaa<span class="dot">.</span></p>
+</footer>
+
+<style>
+  .footer { border-top: 1px solid var(--line); overflow: hidden; }
+  .footer-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding-block: 28px; }
+  ul { list-style: none; display: flex; gap: 24px; margin: 0; padding: 0; }
+  a { text-decoration: none; text-transform: capitalize; color: var(--muted); font-size: 14px; font-weight: 600; transition: color .25s; }
+  a:hover { color: var(--ink); }
+  .top { display: inline-block; text-transform: uppercase; }
+  .giant {
+    font-family: var(--display); font-weight: 800; letter-spacing: -0.07em; line-height: .75;
+    font-size: 27vw; text-align: center; margin: 0 0 -0.06em; white-space: nowrap;
+    background: linear-gradient(180deg, var(--ink) 10%, color-mix(in srgb, var(--ink) 0%, transparent) 95%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .giant .dot { -webkit-text-fill-color: var(--accent); }
+</style>

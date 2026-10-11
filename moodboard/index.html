@@ -1,0 +1,477 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Najlaa Portfolio Moodboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@300;400;500;600;700&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=DM+Sans:wght@400;500;700&family=Syne:wght@500;700;800&family=Manrope:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one 1120px column of moodboard "plates"; each plate = one brand decision, labelled like a spec sheet */
+:root {
+  --bg: #FAF7F2;
+  --surface: #FFFFFF;
+  --ink: #1A1A1A;
+  --muted: #6B655E;
+  --line: #E7E1D8;
+  /* accent options are swapped by the picker in plate 02; -l = light theme, -d = dark theme */
+  --accent-l: #1F6F6B; --accent-d: #5FBDB5;
+  --soft-l: #DCEDEB; --soft-d: #16302E;
+  --on-l: #FFFFFF; --on-d: #0B1A19;
+  --accent: var(--accent-l);
+  --accent-soft: var(--soft-l);
+  --on-accent: var(--on-l);
+  --display: "Readex Pro", system-ui, sans-serif;
+  --body: "Readex Pro", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141210; --surface: #1D1A17; --ink: #F3EEE7; --muted: #A49C92;
+    --line: #2E2A26; --accent: var(--accent-d); --accent-soft: var(--soft-d); --on-accent: var(--on-d);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141210; --surface: #1D1A17; --ink: #F3EEE7; --muted: #A49C92;
+  --line: #2E2A26; --accent: var(--accent-d); --accent-soft: var(--soft-d); --on-accent: var(--on-d);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--body); font-size: 16px; line-height: 1.55;
+  padding-inline: 20px; padding-block: 40px 80px;
+}
+.wrap { max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 72px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; margin: 0; }
+p { margin: 0; }
+.label {
+  font-family: var(--mono); font-size: 12px; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--muted);
+}
+.plate { display: flex; flex-direction: column; gap: 24px; }
+.plate-head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+.plate-head h2 { font-size: 28px; font-weight: 600; letter-spacing: -.01em; }
+
+/* Masthead */
+.mast { display: flex; flex-direction: column; gap: 20px; }
+.mast h1 { font-size: clamp(44px, 8vw, 96px); font-weight: 700; letter-spacing: -.035em; line-height: .98; }
+.mast h1 .dot { color: var(--accent); }
+.mast p { max-width: 60ch; color: var(--muted); font-size: 18px; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { font-size: 13px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); }
+
+/* Logo */
+.logos { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; }
+.logo-tile { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 28px; display: flex; flex-direction: column; gap: 20px; justify-content: space-between; min-height: 240px; min-width: 0; }
+.logo-tile.inverse { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.logo-tile.inverse .label { color: color-mix(in srgb, var(--bg) 65%, transparent); }
+.logo-tile .stage { flex: 1; display: grid; place-items: center; }
+.wordmark { font-family: var(--display); font-weight: 700; font-size: clamp(48px, 7vw, 76px); letter-spacing: -.04em; line-height: 1; }
+.wordmark .dot { color: var(--accent); }
+.mono-mark { width: 112px; height: 112px; border-radius: 28px; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; font-family: var(--display); font-weight: 700; font-size: 52px; letter-spacing: -.06em; }
+.fav-row { display: flex; gap: 14px; align-items: flex-end; }
+.fav-row .mono-mark:nth-child(2) { width: 64px; height: 64px; border-radius: 16px; font-size: 30px; }
+.fav-row .mono-mark:nth-child(3) { width: 32px; height: 32px; border-radius: 8px; font-size: 15px; }
+.fav-row .mono-mark:nth-child(4) { width: 16px; height: 16px; border-radius: 4px; font-size: 8px; }
+
+/* Color */
+.swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; }
+.sw { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.sw .chip-c { aspect-ratio: 1 / 1.15; max-width: 100%; border-radius: 14px; border: 1px solid var(--line); }
+.sw b { font-size: 14px; font-weight: 600; }
+.sw span { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.ratio { display: flex; height: 18px; border-radius: 999px; overflow: hidden; border: 1px solid var(--line); }
+.ratio div { height: 100%; }
+
+.accents { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+.accents button {
+  display: flex; align-items: center; gap: 10px; text-align: left; min-width: 0;
+  padding: 10px 12px; border-radius: 14px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink); font: 500 14px/1.2 var(--body); cursor: pointer;
+}
+.accents button i { width: 28px; height: 28px; border-radius: 50%; flex: none; display: block; }
+.accents button small { display: block; font-family: var(--mono); font-size: 11px; color: var(--muted); font-weight: 400; margin-top: 3px; }
+.accents button[aria-pressed="true"] { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.accents button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+@media (max-width: 860px) { .accents { grid-template-columns: repeat(2, 1fr); } }
+
+/* Type */
+.type-switch { display: flex; gap: 8px; flex-wrap: wrap; }
+.type-switch button {
+  font: 500 14px/1 var(--body); padding: 10px 16px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer;
+}
+.type-switch button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.type-switch button:focus-visible, .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.specimen { display: grid; grid-template-columns: 1.3fr 1fr; gap: 32px; align-items: start; }
+.specimen .big { font-family: var(--display); font-size: clamp(64px, 12vw, 160px); font-weight: 700; line-height: .9; letter-spacing: -.05em; }
+.scale { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.scale-row { display: grid; grid-template-columns: 72px 1fr; gap: 12px; align-items: baseline; border-bottom: 1px dashed var(--line); padding-bottom: 12px; }
+.scale-row .label { font-size: 11px; }
+.s-hero { font-family: var(--display); font-size: 40px; font-weight: 700; letter-spacing: -.03em; line-height: 1.05; }
+.s-h2 { font-family: var(--display); font-size: 28px; font-weight: 600; letter-spacing: -.02em; line-height: 1.1; }
+.s-h3 { font-family: var(--display); font-size: 20px; font-weight: 600; }
+.s-body { font-size: 16px; color: var(--ink); }
+.s-small { font-size: 13px; color: var(--muted); }
+.type-note { font-size: 14px; color: var(--muted); }
+
+/* UI preview */
+.browser { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.browser-bar { display: flex; gap: 6px; padding: 12px 16px; border-bottom: 1px solid var(--line); align-items: center; }
+.browser-bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); display: block; }
+.browser-bar span { margin-left: 12px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.site { background: var(--bg); padding: 24px clamp(16px, 4vw, 48px) 48px; display: flex; flex-direction: column; gap: 56px; }
+.nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+.nav .wm { font-family: var(--display); font-weight: 700; font-size: 22px; letter-spacing: -.03em; }
+.nav .wm .dot { color: var(--accent); }
+.nav ul { list-style: none; display: flex; gap: 24px; margin: 0; padding: 0; font-size: 14px; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; font: 500 15px/1 var(--body); padding: 14px 22px; border-radius: 999px; border: 1px solid var(--ink); color: var(--ink); background: transparent; text-decoration: none; cursor: pointer; transition: background .2s, color .2s, transform .2s; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.btn:hover { transform: translateY(-2px); }
+.btn.sm { padding: 10px 16px; font-size: 13px; }
+.hero { display: flex; flex-direction: column; gap: 24px; max-width: 860px; }
+.avail { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
+.avail::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #3BB273; }
+.hero h3 { font-size: clamp(38px, 6.4vw, 76px); font-weight: 700; letter-spacing: -.04em; line-height: 1; }
+.hero h3 em { font-style: normal; color: var(--accent); }
+.hero p { font-size: 18px; color: var(--muted); max-width: 52ch; }
+.hero .ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+.stack { display: flex; gap: 20px; flex-wrap: wrap; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+.work-head { display: flex; justify-content: space-between; align-items: end; gap: 16px; flex-wrap: wrap; }
+.work-head h4 { font-family: var(--display); font-size: 32px; letter-spacing: -.02em; margin: 0; font-weight: 600; }
+.cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+.card { display: flex; flex-direction: column; gap: 14px; min-width: 0; cursor: pointer; }
+.card .shot { aspect-ratio: 16 / 11; max-width: 100%; border-radius: 16px; overflow: hidden; position: relative; }
+.card .shot .inner { position: absolute; inset: 0; transition: transform .5s cubic-bezier(.2,.7,.2,1); display: grid; place-items: center; }
+.card:hover .shot .inner { transform: scale(1.04); }
+.card .view { position: absolute; right: 16px; bottom: 16px; background: var(--ink); color: var(--bg); font-size: 13px; padding: 8px 14px; border-radius: 999px; opacity: 0; transform: translateY(6px); transition: .25s; }
+.card:hover .view { opacity: 1; transform: none; }
+.card .meta { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+.card h5 { font-family: var(--display); font-size: 20px; font-weight: 600; margin: 0; letter-spacing: -.01em; }
+.card .yr { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.card p { font-size: 14px; color: var(--muted); }
+.tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { font-size: 12px; padding: 4px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--ink); }
+.phone { width: 34%; aspect-ratio: 9 / 19; border-radius: 18px; background: #FFFFFF; box-shadow: 0 20px 40px -18px rgba(0,0,0,.35); display: flex; flex-direction: column; gap: 6px; padding: 14px 10px; }
+.phone i { display: block; height: 7px; border-radius: 4px; background: #ECE7E0; }
+.phone i.a { background: var(--accent-l); width: 60%; height: 18px; border-radius: 6px; }
+.phone i.b { height: 46px; border-radius: 8px; background: #F3EEE7; }
+.screen { width: 78%; aspect-ratio: 16 / 10; border-radius: 10px; background: #FFFFFF; box-shadow: 0 20px 40px -18px rgba(0,0,0,.35); padding: 12px; display: grid; grid-template-columns: 1fr 2fr; gap: 8px; }
+.screen i { display: block; border-radius: 6px; background: #EFEAE3; }
+.screen i.a { background: #1A1A1A; }
+
+/* Case study */
+.case { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+.case-meta { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px 24px; align-content: start; }
+.case-meta div { display: flex; flex-direction: column; gap: 4px; border-top: 1px solid var(--line); padding-top: 10px; }
+.case-meta b { font-weight: 500; font-size: 15px; }
+.case-flow { display: flex; flex-direction: column; gap: 0; }
+.case-flow div { display: grid; grid-template-columns: 28px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+.case-flow span.n { font-family: var(--mono); font-size: 12px; color: var(--accent); }
+.case-flow b { font-weight: 600; font-family: var(--display); }
+.case-flow small { display: block; color: var(--muted); font-size: 13px; }
+
+/* Motion + voice */
+.duo { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.box { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 24px; display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.box ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; font-size: 15px; }
+.box .say { color: var(--ink); }
+.box .nosay { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--accent); }
+.reveal { animation: rise .8s cubic-bezier(.2,.7,.2,1) both; }
+.reveal:nth-child(2) { animation-delay: .08s; } .reveal:nth-child(3) { animation-delay: .16s; } .reveal:nth-child(4) { animation-delay: .24s; }
+@keyframes rise { from { opacity: .001; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* Add project */
+.code { background: var(--ink); color: var(--bg); border-radius: 16px; padding: 22px; font-family: var(--mono); font-size: 13px; line-height: 1.7; overflow-x: auto; white-space: pre; }
+.code .k { color: #F0A08F; } .code .c { opacity: .55; }
+.steps { display: flex; flex-direction: column; gap: 10px; counter-reset: s; }
+.steps li { list-style: none; display: grid; grid-template-columns: 32px 1fr; gap: 10px; align-items: baseline; font-size: 15px; }
+.steps li::before { counter-increment: s; content: counter(s); font-family: var(--mono); font-size: 12px; width: 24px; height: 24px; border-radius: 50%; background: var(--accent-soft); color: var(--ink); display: grid; place-items: center; }
+.steps { padding: 0; margin: 0; }
+
+footer { color: var(--muted); font-size: 13px; border-top: 1px solid var(--line); padding-top: 16px; }
+
+@media (max-width: 860px) {
+  .logos { grid-template-columns: 1fr 1fr; }
+  .logos .logo-tile:first-child { grid-column: 1 / -1; }
+  .swatches { grid-template-columns: repeat(3, 1fr); }
+  .specimen, .case, .duo { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .cards, .logos { grid-template-columns: 1fr; }
+  .nav ul { display: none; }
+  .case-meta { grid-template-columns: 1fr 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+
+<div class="wrap">
+
+  <header class="mast">
+    <span class="label">Brand moodboard · v2 · Warm Minimal</span>
+    <h1>najlaa<span class="dot">.</span></h1>
+    <p>Personal portfolio for Najlaa Abuouda: UX/UI designer who also ships the front end. One warm neutral ground, one confident accent, and the project screens doing the talking.</p>
+    <div class="chips">
+      <span class="chip">English only</span>
+      <span class="chip">Built in code (Astro)</span>
+      <span class="chip">6 featured case studies</span>
+      <span class="chip">Add projects from a single file</span>
+    </div>
+  </header>
+
+  <!-- LOGO -->
+  <section class="plate">
+    <div class="plate-head"><h2>Logo</h2><span class="label">01 · identity</span></div>
+    <div class="logos">
+      <div class="logo-tile">
+        <span class="label">Primary wordmark</span>
+        <div class="stage"><div class="wordmark">najlaa<span class="dot">.</span></div></div>
+        <p class="type-note">Lowercase, tight tracking. The full stop is the only spot of colour, and it carries over to every heading on the site.</p>
+      </div>
+      <div class="logo-tile inverse">
+        <span class="label">On dark</span>
+        <div class="stage"><div class="wordmark" style="font-size:44px">najlaa<span class="dot">.</span></div></div>
+      </div>
+      <div class="logo-tile">
+        <span class="label">Monogram · favicon</span>
+        <div class="stage">
+          <div class="fav-row">
+            <div class="mono-mark">nA</div>
+            <div class="mono-mark">nA</div>
+            <div class="mono-mark">nA</div>
+            <div class="mono-mark">nA</div>
+          </div>
+        </div>
+        <p class="type-note">Used for avatar on Behance, LinkedIn, GitHub.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLOR -->
+  <section class="plate">
+    <div class="plate-head"><h2>Colour</h2><span class="label">02 · palette</span></div>
+    <div class="swatches">
+      <div class="sw"><div class="chip-c" style="background:#FAF7F2"></div><b>Paper</b><span>#FAF7F2 · page bg</span></div>
+      <div class="sw"><div class="chip-c" style="background:#FFFFFF"></div><b>Surface</b><span>#FFFFFF · cards</span></div>
+      <div class="sw"><div class="chip-c" style="background:#E7E1D8"></div><b>Line</b><span>#E7E1D8 · borders</span></div>
+      <div class="sw"><div class="chip-c" style="background:#6B655E"></div><b>Stone</b><span>#6B655E · muted text</span></div>
+      <div class="sw"><div class="chip-c" style="background:#1A1A1A"></div><b>Ink</b><span>#1A1A1A · text</span></div>
+      <div class="sw"><div class="chip-c" style="background:var(--accent-l)"></div><b id="acc-name">Deep Teal</b><span id="acc-hex">#1F6F6B · accent</span></div>
+    </div>
+    <span class="label">Pick the accent · whole page updates</span>
+    <div class="accents" role="group" aria-label="Accent colour">
+      <button type="button" id="a-teal" aria-pressed="true" data-name="Deep Teal" data-l="#1F6F6B" data-d="#5FBDB5" data-sl="#DCEDEB" data-sd="#16302E" data-ol="#FFFFFF" data-od="#0B1A19" data-n="Calm and trustworthy. Feels like product and UX work, sits beautifully on warm paper. My pick.">
+        <i style="background:#1F6F6B"></i><span>Deep Teal<small>#1F6F6B · recommended</small></span></button>
+      <button type="button" id="a-cobalt" aria-pressed="false" data-name="Cobalt" data-l="#2F55D4" data-d="#8AA4FF" data-sl="#E1E7FB" data-sd="#1C2440" data-ol="#FFFFFF" data-od="#0E1430" data-n="Sharp and confident. Reads as tech and frontend. Strong contrast with the cream ground.">
+        <i style="background:#2F55D4"></i><span>Cobalt<small>#2F55D4</small></span></button>
+      <button type="button" id="a-plum" aria-pressed="false" data-name="Plum" data-l="#7B3F8C" data-d="#C894D6" data-sl="#EFE3F2" data-sd="#2D1D33" data-ol="#FFFFFF" data-od="#1E0F24" data-n="Elegant and personal. Creative without being loud. Pairs well with graphic and branding work.">
+        <i style="background:#7B3F8C"></i><span>Plum<small>#7B3F8C</small></span></button>
+      <button type="button" id="a-olive" aria-pressed="false" data-name="Olive" data-l="#5A6B2E" data-d="#B3C777" data-sl="#E7EBD9" data-sd="#23281A" data-ol="#FFFFFF" data-od="#151A0B" data-n="Earthy and quiet. Very natural next to cream. The most understated of the five.">
+        <i style="background:#5A6B2E"></i><span>Olive<small>#5A6B2E</small></span></button>
+      <button type="button" id="a-ochre" aria-pressed="false" data-name="Ochre" data-l="#C08A1E" data-d="#E6B656" data-sl="#F5E9CF" data-sd="#33280F" data-ol="#1A1A1A" data-od="#1A1406" data-n="Warm and sunny. Buttons use dark text on ochre so they stay readable.">
+        <i style="background:#C08A1E"></i><span>Ochre<small>#C08A1E</small></span></button>
+    </div>
+    <p class="type-note" id="acc-note">Calm and trustworthy. Feels like product and UX work, sits beautifully on warm paper. My pick.</p>
+    <span class="label">Usage ratio</span>
+    <div class="ratio" aria-label="Paper 62%, Surface 16%, Ink 14%, Stone 5%, Signal 3%">
+      <div style="width:62%;background:#FAF7F2"></div>
+      <div style="width:16%;background:#FFFFFF"></div>
+      <div style="width:14%;background:#1A1A1A"></div>
+      <div style="width:5%;background:#6B655E"></div>
+      <div style="width:3%;background:var(--accent-l)"></div>
+    </div>
+    <p class="type-note">Accent stays under 5%: primary button, the logo dot, active states, tags. Dark mode swaps Paper for #141210 and uses a lighter tint of the accent so it keeps contrast.</p>
+  </section>
+
+  <!-- TYPE -->
+  <section class="plate">
+    <div class="plate-head"><h2>Typography</h2><span class="label">03 · try each pairing</span></div>
+    <div class="type-switch" role="group" aria-label="Font pairing">
+      <button type="button" id="t-readex" aria-pressed="true" data-d='"Readex Pro", system-ui, sans-serif' data-b='"Readex Pro", system-ui, sans-serif' data-n="Readex Pro for everything. Soft, geometric, friendly. Also has Arabic if you ever add it.">A · Readex Pro</button>
+      <button type="button" id="t-bricolage" aria-pressed="false" data-d='"Bricolage Grotesque", system-ui, sans-serif' data-b='"DM Sans", system-ui, sans-serif' data-n="Bricolage Grotesque headings with DM Sans body. More character, a little editorial, still clean.">B · Bricolage + DM Sans</button>
+      <button type="button" id="t-syne" aria-pressed="false" data-d='"Syne", system-ui, sans-serif' data-b='"Manrope", system-ui, sans-serif' data-n="Syne headings with Manrope body. Wide and bold, the most 'designer' of the three.">C · Syne + Manrope</button>
+    </div>
+    <div class="specimen">
+      <div class="big">Aa<br>Gg</div>
+      <div class="scale">
+        <div class="scale-row"><span class="label">Hero 76</span><span class="s-hero">I design products and build them.</span></div>
+        <div class="scale-row"><span class="label">H2 32</span><span class="s-h2">Selected work</span></div>
+        <div class="scale-row"><span class="label">H3 20</span><span class="s-h3">Shipping app · Case study</span></div>
+        <div class="scale-row"><span class="label">Body 16</span><span class="s-body">Five years turning research and user flows into interfaces people understand on first use.</span></div>
+        <div class="scale-row"><span class="label">Small 13</span><span class="s-small">UX Research · Wireframes · UI · Frontend</span></div>
+      </div>
+    </div>
+    <p class="type-note" id="type-note">Readex Pro for everything. Soft, geometric, friendly. Also has Arabic if you ever add it.</p>
+  </section>
+
+  <!-- UI PREVIEW -->
+  <section class="plate">
+    <div class="plate-head"><h2>Homepage preview</h2><span class="label">04 · hover the cards</span></div>
+    <div class="browser">
+      <div class="browser-bar"><i></i><i></i><i></i><span>najlaa.design</span></div>
+      <div class="site">
+        <nav class="nav">
+          <div class="wm">najlaa<span class="dot">.</span></div>
+          <ul><li>Work</li><li>About</li><li>Services</li><li>Contact</li></ul>
+          <a class="btn sm" href="#contact">Let's talk</a>
+        </nav>
+        <div class="hero">
+          <span class="avail reveal">Available for freelance · Oct 2026</span>
+          <h3 class="reveal">I design products <em>and build them.</em></h3>
+          <p class="reveal">UX/UI designer and frontend developer. From user research to a working interface, handed over ready to ship.</p>
+          <div class="ctas reveal">
+            <a class="btn primary" href="#work">View my work →</a>
+            <a class="btn" href="#cv">Download CV</a>
+          </div>
+          <div class="stack"><span>Figma</span><span>Adobe XD</span><span>HTML/CSS/JS</span><span>React</span><span>Illustrator</span><span>After Effects</span></div>
+        </div>
+        <div class="work-head" id="work">
+          <h4>Selected work</h4>
+          <span class="label">2021 to 2026</span>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <div class="shot"><div class="inner" style="background:var(--accent-soft)"><div class="phone"><i class="a"></i><i class="b"></i><i></i><i style="width:70%"></i><i class="b"></i><i></i></div></div><span class="view">View case →</span></div>
+            <div class="tags"><span class="tag">Mobile app</span><span class="tag">UX Research</span></div>
+            <div class="meta"><h5>Shipping App</h5><span class="yr">2024</span></div>
+            <p>Tracking parcels in three taps instead of seven.</p>
+          </article>
+          <article class="card">
+            <div class="shot"><div class="inner" style="background:#1F1D1B"><div class="screen"><i class="a"></i><i></i><i></i><i></i></div></div><span class="view">View case →</span></div>
+            <div class="tags"><span class="tag">Web</span><span class="tag">Design + Code</span></div>
+            <div class="meta"><h5>Gourmet Au Catering</h5><span class="yr">2023</span></div>
+            <p>Designed in Figma, built and launched by me.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+    <p class="type-note">Placeholder visuals. Real Figma screens go in once you send the links.</p>
+  </section>
+
+  <!-- CASE STUDY -->
+  <section class="plate">
+    <div class="plate-head"><h2>Case study template</h2><span class="label">05 · every project page</span></div>
+    <div class="case">
+      <div class="case-meta">
+        <div><span class="label">Role</span><b>UX/UI Designer</b></div>
+        <div><span class="label">Timeline</span><b>8 weeks</b></div>
+        <div><span class="label">Platform</span><b>iOS · Android</b></div>
+        <div><span class="label">Tools</span><b>Figma · Zeplin</b></div>
+        <div><span class="label">Deliverables</span><b>Flows, UI, prototype</b></div>
+        <div><span class="label">Links</span><b>Figma · Behance</b></div>
+      </div>
+      <div class="case-flow">
+        <div><span class="n">1</span><span><b>Overview</b><small>Cover image and a one-line summary</small></span></div>
+        <div><span class="n">2</span><span><b>Problem</b><small>What was broken, and for whom</small></span></div>
+        <div><span class="n">3</span><span><b>Research and flows</b><small>Personas, user flow, key insights</small></span></div>
+        <div><span class="n">4</span><span><b>Wireframes</b><small>Low-fi to hi-fi</small></span></div>
+        <div><span class="n">5</span><span><b>Final UI</b><small>Large screens, mobile mockups</small></span></div>
+        <div><span class="n">6</span><span><b>Outcome</b><small>Result, what you learned, next project link</small></span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MOTION + VOICE -->
+  <section class="plate">
+    <div class="plate-head"><h2>Motion and voice</h2><span class="label">06 · feel</span></div>
+    <div class="duo">
+      <div class="box">
+        <span class="label">Motion</span>
+        <ul>
+          <li>Hero lines rise in one after another on load</li>
+          <li>Project images zoom slightly on hover, with a "View case" pill</li>
+          <li>Sections fade up once while scrolling</li>
+          <li>Buttons lift 2px on hover</li>
+          <li>All of it turns off when the visitor's system asks for reduced motion</li>
+        </ul>
+      </div>
+      <div class="box">
+        <span class="label">Voice</span>
+        <ul>
+          <li class="say">"Tracking parcels in three taps instead of seven."</li>
+          <li class="nosay">"Innovative cutting-edge delivery solution."</li>
+          <li class="say">"I design products and build them."</li>
+          <li class="nosay">"Passionate creative who loves design."</li>
+        </ul>
+        <p class="type-note">Short, concrete, first person. Real numbers only.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADD PROJECT -->
+  <section class="plate">
+    <div class="plate-head"><h2>Adding a new project</h2><span class="label">07 · one folder per project</span></div>
+    <div class="duo">
+      <div class="code"><span class="c"># src/content/projects/shipping-app/index.md</span>
+---
+<span class="k">title:</span> Shipping App
+<span class="k">summary:</span> Tracking parcels in three taps instead of seven.
+<span class="k">cover:</span> ./cover.webp
+<span class="k">year:</span> 2024
+<span class="k">role:</span> UX/UI Designer
+<span class="k">tags:</span> [Mobile app, UX Research]
+<span class="k">tools:</span> [Figma, Zeplin]
+<span class="k">featured:</span> true
+<span class="k">order:</span> 1
+<span class="k">links:</span>
+  <span class="k">figma:</span> https://figma.com/...
+  <span class="k">behance:</span> https://behance.net/...
+---
+
+## Problem
+...</div>
+      <div class="box">
+        <span class="label">Steps</span>
+        <ol class="steps">
+          <li>Copy the template folder and rename it</li>
+          <li>Drop in the cover and screen images</li>
+          <li>Fill in the fields and write the story</li>
+          <li>Push to GitHub. The site rebuilds and goes live by itself.</li>
+        </ol>
+        <p class="type-note">Option: a small /admin page (Decap CMS) so you can add a project from a browser form, without opening code.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>najlaa. moodboard · Warm Minimal · October 2026</footer>
+</div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var note = document.getElementById('type-note');
+  var btns = document.querySelectorAll('.type-switch button');
+  function apply(b) {
+    root.style.setProperty('--display', b.dataset.d);
+    root.style.setProperty('--body', b.dataset.b);
+    note.textContent = b.dataset.n;
+    btns.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+    try { localStorage.setItem('najlaa-type', b.id); } catch (e) {}
+  }
+  btns.forEach(function (b) { b.addEventListener('click', function () { apply(b); }); });
+  try {
+    var saved = localStorage.getItem('najlaa-type');
+    if (saved && document.getElementById(saved)) apply(document.getElementById(saved));
+  } catch (e) {}
+
+  var accBtns = document.querySelectorAll('.accents button');
+  function applyAccent(b) {
+    var d = b.dataset;
+    [['--accent-l', d.l], ['--accent-d', d.d], ['--soft-l', d.sl], ['--soft-d', d.sd], ['--on-l', d.ol], ['--on-d', d.od]]
+      .forEach(function (p) { root.style.setProperty(p[0], p[1]); });
+    document.getElementById('acc-name').textContent = d.name;
+    document.getElementById('acc-hex').textContent = d.l + ' · accent';
+    document.getElementById('acc-note').textContent = d.n;
+    accBtns.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+    try { localStorage.setItem('najlaa-accent', b.id); } catch (e) {}
+  }
+  accBtns.forEach(function (b) { b.addEventListener('click', function () { applyAccent(b); }); });
+  try {
+    var savedA = localStorage.getItem('najlaa-accent');
+    if (savedA && document.getElementById(savedA)) applyAccent(document.getElementById(savedA));
+  } catch (e) {}
+})();
+</script>
+</html>

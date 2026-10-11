@@ -1,0 +1,72 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+
+const projects = (await getCollection('projects', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order || b.data.year - a.data.year);
+
+// Fixed tabs, each with how many projects fall in it
+const categories = ['Apps', 'Dashboards', 'Websites', 'Landing Pages', 'Design Systems'] as const;
+const filters = categories.map((c) => [c, projects.filter((p) => p.data.category === c).length] as const);
+---
+
+<Base title="Work" description="All UX/UI and frontend projects by Najlaa Abuouda.">
+  <section class="section container">
+    <div class="section-head">
+      <div class="head-text">
+        <span class="label">[ Work ]</span>
+        <h1>All work<span class="dot">.</span></h1>
+      </div>
+    </div>
+
+    <div class="filters" role="group" aria-label="Filter projects">
+      <button type="button" aria-pressed="true" data-filter="">All <span>{projects.length}</span></button>
+      {filters.map(([cat, n]) => (
+        <button type="button" aria-pressed="false" data-filter={cat}>{cat} <span>{n}</span></button>
+      ))}
+    </div>
+
+    <div class="grid">
+      {projects.map((p) => <ProjectCard project={p} />)}
+    </div>
+    <p class="empty" hidden>Projects in this category are coming soon.</p>
+  </section>
+</Base>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('.filters button');
+  const cards = document.querySelectorAll<HTMLElement>('.grid .card');
+  const empty = document.querySelector<HTMLElement>('.empty');
+  buttons.forEach((btn) =>
+    btn.addEventListener('click', () => {
+      const f = btn.dataset.filter ?? '';
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      let shown = 0;
+      cards.forEach((c) => {
+        c.hidden = !!f && c.dataset.category !== f;
+        if (!c.hidden) shown++;
+      });
+      if (empty) empty.hidden = shown > 0;
+    })
+  );
+</script>
+
+<style>
+  .head-text { display: flex; flex-direction: column; gap: 12px; }
+  h1 { font-size: clamp(44px, 7vw, 88px); font-weight: 800; letter-spacing: -0.035em; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 40px; }
+  .filters button {
+    font: 500 14px/1 var(--body); padding: 10px 16px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+    display: inline-flex; gap: 8px; align-items: center;
+  }
+  .filters button span { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .filters button[aria-pressed='true'] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+  .filters button[aria-pressed='true'] span { color: var(--bg); opacity: .7; }
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(28px, 4vw, 48px) clamp(20px, 3vw, 32px); }
+  .grid :global([hidden]) { display: none; }
+  .empty { color: var(--muted); padding: 48px 0; }
+  .empty[hidden] { display: none; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+</style>

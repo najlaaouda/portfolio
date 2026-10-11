@@ -1,0 +1,207 @@
+---
+// "Specimen plate": one project as a brand-coloured plate. Spec sheet on the left,
+// two columns of real screens drifting in opposite directions on the right.
+import type { CollectionEntry } from 'astro:content';
+import { brandStyle, vtName, reelImages } from '../lib/brand';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  index: number;
+  total: number;
+}
+
+const { project, index, total } = Astro.props;
+const d = project.data;
+const vt = vtName(project.id);
+const reel = reelImages(d.showcase, d.screens);
+const colA = reel.filter((_, i) => i % 2 === 0);
+const colB = reel.filter((_, i) => i % 2 === 1);
+const pad = (n: number) => String(n).padStart(2, '0');
+const size = d.device === 'web' ? '1440 × auto' : '390 × 844';
+// Web projects: one browser window that scrolls through a full page, plus a phone if there is a mobile screen
+const isPhone = (src: string) => /\/mobile-/.test(src);
+const webShot = reel.find((src) => !isPhone(src) && !/\/tablet-/.test(src));
+const phoneShot = reel.find(isPhone);
+const host = d.links.live ? new URL(d.links.live).host : `${project.id}.app`;
+---
+
+<li class="plate" style={`--i: ${index}; ${brandStyle(d.brand)}`} data-device={d.device}>
+  <div class="plate-bg" style={`view-transition-name: plate-${vt}`}></div>
+
+  <div class="plate-inner">
+    <div class="spec">
+      <p class="label anim" style="--d: 0ms">[ {pad(index + 1)} / {pad(total)} ] · {d.year}</p>
+      <h3 class="title">
+        <a href={`/work/${project.id}/`} style={`view-transition-name: title-${vt}`}>
+          <span class="mask"><span>{d.title}</span></span>
+        </a>
+      </h3>
+      <p class="summary anim" style="--d: 160ms">{d.summary}</p>
+      <dl class="anim" style="--d: 240ms">
+        {d.platform && <div><dt>Platform</dt><dd>{d.platform}</dd></div>}
+        <div><dt>Role</dt><dd>{d.role}</dd></div>
+        {d.tags.length > 0 && <div><dt>Focus</dt><dd>{d.tags.slice(0, 2).join(' · ')}</dd></div>}
+        {d.brand && <div><dt>Brand</dt><dd><i class="swatch"></i>{d.brand.toUpperCase()}</dd></div>}
+      </dl>
+      <span class="cta anim" style="--d: 320ms" aria-hidden="true">Read case study <b>→</b></span>
+    </div>
+
+    <div class="reel" aria-hidden="true">
+      {d.device === 'web' && webShot ? (
+        <div class="web">
+          <div class="browser">
+            <div class="bar"><i></i><i></i><i></i><span>{host}</span></div>
+            <div class="viewport">
+              <img class="page" src={webShot} alt="" loading="lazy" decoding="async" width="1440" />
+            </div>
+            <span class="inspect"><i></i><i></i><i></i><i></i><em>{size}</em></span>
+          </div>
+          {phoneShot && (
+            <div class="shot mini"><img src={phoneShot} alt="" loading="lazy" decoding="async" width="390" height="844" /></div>
+          )}
+        </div>
+      ) : reel.length > 0 ? (
+        <>
+          <div class="col a">
+            {colA.map((src, i) => (
+              <div class:list={['shot', { first: i === 0 }]}>
+                <img src={src} alt="" loading="lazy" decoding="async" width="390" height="844" />
+                {i === 0 && (
+                  <span class="inspect">
+                    <i></i><i></i><i></i><i></i>
+                    <em>{size}</em>
+                  </span>
+                )}
+              </div>
+            ))}
+          </div>
+          <div class="col b">
+            {colB.map((src) => (
+              <div class="shot"><img src={src} alt="" loading="lazy" decoding="async" width="390" height="844" /></div>
+            ))}
+          </div>
+        </>
+      ) : (
+        <img class="cover-fill" src={d.cover} alt="" loading="lazy" decoding="async" />
+      )}
+    </div>
+  </div>
+</li>
+
+<style>
+  .plate {
+    position: relative;
+    color: var(--on-brand);
+    border-radius: 28px;
+    isolation: isolate;
+    transform-origin: 50% 0;
+    scale: var(--s, 1);
+  }
+  .plate::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit;
+    background: #000; opacity: var(--dim, 0); pointer-events: none; z-index: 3;
+  }
+  .plate-bg {
+    position: absolute; inset: 0; z-index: -1;
+    background: var(--brand); border-radius: 28px;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / .06);
+  }
+  .plate-inner {
+    display: grid; grid-template-columns: 5fr 6fr; grid-template-rows: minmax(0, 1fr); gap: clamp(24px, 4vw, 56px);
+    height: 100%; padding: clamp(28px, 4vw, 56px);
+    border-radius: 28px; overflow: hidden;
+  }
+
+  /* Spec sheet */
+  .spec { display: flex; flex-direction: column; justify-content: center; gap: 20px; min-width: 0; }
+  .spec .label { color: var(--on-brand-2); }
+  .title { overflow-wrap: break-word; font-size: clamp(34px, 4.2vw, 60px); font-weight: 800; letter-spacing: -0.035em; line-height: 0.98; }
+  .title a { text-decoration: none; color: inherit; display: inline-block; }
+  .title a::after { content: ""; position: absolute; inset: 0; z-index: 4; border-radius: 28px; }
+  .mask { display: block; overflow: clip; padding-bottom: 0.08em; }
+  .mask > span { display: block; }
+  .summary { font-size: 17px; color: var(--on-brand-2); max-width: 40ch; }
+  dl { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 20px; font-size: 14px; }
+  dl div { padding-block: 10px; border-top: 1px solid color-mix(in srgb, var(--on-brand) 22%, transparent); display: flex; flex-direction: column; gap: 2px; }
+  dt { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--on-brand-2); }
+  dd { margin: 0; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .swatch { width: 12px; height: 12px; border-radius: 4px; background: var(--brand); box-shadow: 0 0 0 1.5px var(--on-brand); }
+  .cta {
+    align-self: flex-start; display: inline-flex; gap: 10px; align-items: center;
+    font-weight: 600; font-size: 15px; padding: 13px 20px; border-radius: 999px;
+    border: 1px solid var(--on-brand); transition: background .3s, color .3s;
+  }
+  .cta b { transition: translate .3s var(--ease); }
+
+  /* Reel */
+  .reel {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 220px)); gap: 18px; justify-content: center;
+    margin-block: calc(-1 * clamp(28px, 4vw, 56px)); min-width: 0; min-height: 0; overflow: hidden;
+  }
+  .col { display: flex; flex-direction: column; gap: 18px; will-change: translate; }
+  .col.a { translate: 0 var(--ya, 2%); }
+  .col.b { translate: 0 var(--yb, -14%); }
+  .shot { position: relative; border-radius: 22px; }
+  .shot img {
+    width: 100%; aspect-ratio: 390 / 844; object-fit: cover; object-position: top;
+    border-radius: 22px; background: color-mix(in srgb, var(--on-brand) 10%, transparent);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / .12), 0 24px 48px -24px rgb(0 0 0 / .5);
+    transition: scale .4s var(--ease);
+  }
+  /* Web projects */
+  .plate[data-device='web'] .reel { display: flex; align-items: center; justify-content: center; margin-block: 0; overflow: visible; }
+  .web { position: relative; width: 100%; height: 100%; display: flex; align-items: center; }
+  .browser { position: relative; width: 100%; height: 88%; display: flex; flex-direction: column; border-radius: 14px; background: #FFFFFF; box-shadow: 0 0 0 1px rgb(255 255 255 / .12), 0 30px 60px -28px rgb(0 0 0 / .55); }
+  .bar { display: flex; align-items: center; gap: 6px; height: 30px; padding-inline: 12px; flex: none; border-bottom: 1px solid #EFEAE3; }
+  .bar i { width: 8px; height: 8px; border-radius: 50%; background: #E7E1D8; }
+  .bar span { margin-inline: auto; font: 500 10.5px/1 var(--mono); color: #6B655E; padding: 5px 14px; border-radius: 999px; background: #F4F0EA; }
+  .viewport { flex: 1; overflow: hidden; border-radius: 0 0 14px 14px; container-type: size; }
+  .page { width: 100%; height: auto; display: block; translate: 0 calc(var(--t, 0) * (100cqh - 100%)); will-change: translate; }
+  .browser .inspect { inset: -6px; border-radius: 18px; }
+  .mini { position: absolute; right: -18px; bottom: -6px; width: 26%; max-width: 150px; translate: 0 var(--yb, -6%); }
+  .mini img { border-radius: 18px; }
+  @media (hover: hover) { .plate:hover .browser { scale: 1.01; } }
+  .browser { transition: scale .4s var(--ease); }
+
+  .cover-fill { grid-column: 1 / -1; width: 100%; height: 100%; object-fit: cover; }
+
+  /* Inspect overlay (hover / focus) */
+  .inspect { position: absolute; inset: -6px; border: 1.5px solid var(--on-brand); border-radius: 26px; opacity: 0; transition: opacity .18s; pointer-events: none; }
+  .inspect i { position: absolute; width: 7px; height: 7px; background: var(--on-brand); }
+  .inspect i:nth-child(1) { top: -4px; left: -4px; } .inspect i:nth-child(2) { top: -4px; right: -4px; }
+  .inspect i:nth-child(3) { bottom: -4px; left: -4px; } .inspect i:nth-child(4) { bottom: -4px; right: -4px; }
+  .inspect em { position: absolute; left: 50%; bottom: -30px; translate: -50% 0; font: 500 11px/1 var(--mono); font-style: normal; padding: 5px 8px; border-radius: 6px; background: var(--on-brand); color: var(--brand); white-space: nowrap; }
+
+  @media (hover: hover) {
+    .plate:hover .inspect { opacity: 1; }
+    .plate:hover .first img { scale: 1.02; }
+    .plate:hover .cta { background: var(--on-brand); color: var(--brand); }
+    .plate:hover .cta b { translate: 4px 0; }
+  }
+  .plate:has(a:focus-visible) { outline: 3px solid var(--ink); outline-offset: 4px; }
+  .plate:has(a:focus-visible) .inspect { opacity: 1; }
+  .title a:focus-visible { outline: none; }
+
+  /* Entrance choreography */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(.js) .anim { opacity: 0; translate: 0 18px; transition: opacity .9s var(--ease) var(--d, 0ms), translate .9s var(--ease) var(--d, 0ms); }
+    :global(.js) .plate.in .anim { opacity: 1; translate: none; }
+    :global(.js) .mask > span { translate: 0 105%; transition: translate .9s var(--ease) 80ms; }
+    :global(.js) .plate.in .mask > span { translate: none; }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .plate-bg { background: color-mix(in oklab, var(--brand) 88%, #000); }
+    .shot img { box-shadow: 0 0 0 1px rgb(255 255 255 / .12), 0 24px 48px -24px rgb(0 0 0 / .7); }
+  }
+
+  @media (max-width: 860px) {
+    .plate { scale: none; }
+    .plate-bg, .plate-inner { border-radius: 20px; }
+    .plate-inner { grid-template-columns: 1fr; grid-template-rows: auto; gap: 24px; padding: 24px; }
+    .reel { order: -1; height: 340px; margin-block: -24px 0; grid-template-columns: repeat(2, minmax(0, 150px)); gap: 12px; overflow: clip; }
+    .col { gap: 12px; }
+    .shot, .shot img { border-radius: 16px; }
+    .inspect { display: none; }
+  }
+</style>

@@ -1,0 +1,220 @@
+{
+  "name": "Najlaa Abuouda",
+  "role": "UX/UI Designer",
+  "available": true,
+  "availableText": "Available for freelance",
+  "heroTitle": "I design apps and websites",
+  "heroAccent": "and the systems behind them.",
+  "heroText": "UX/UI designer for mobile and web products. I build design systems with clear documentation in Figma, and design with Claude, from first screens to custom skills that speed up the work.",
+  "stack": [
+    "Figma",
+    "Framer",
+    "Design Systems",
+    "Claude",
+    "Claude Skills",
+    "FigJam",
+    "Adobe XD",
+    "Zeplin"
+  ],
+  "about": [
+    "I'm Najlaa Abuouda, a UX/UI designer who has been designing mobile apps and websites since 2019. I care about more than how a screen looks: I want it to solve a real problem for the person using it.",
+    "I have designed and redesigned more than 15 apps and websites: online stores with customer, seller and driver roles, delivery, hospital and legal apps, landing pages and a SaaS platform. I start with user research, personas, journeys and flows, then move to wireframes, prototypes and polished, responsive UI. I work closely with developers, test the experience before launch, and can turn designs into HTML, CSS and Bootstrap when the project needs it."
+  ],
+  "process": [
+    {
+      "title": "Discover",
+      "text": "Find the real problem before drawing anything.",
+      "outputs": [
+        "Stakeholder brief",
+        "User interviews",
+        "Competitor review"
+      ]
+    },
+    {
+      "title": "Define",
+      "text": "Turn findings into a clear path through the product.",
+      "outputs": [
+        "Personas",
+        "User flows",
+        "Information architecture"
+      ]
+    },
+    {
+      "title": "Design",
+      "text": "From rough structure to polished, consistent screens.",
+      "outputs": [
+        "Wireframes",
+        "Hi-fi UI",
+        "Clickable prototype",
+        "Explored with Claude"
+      ]
+    },
+    {
+      "title": "Systemise",
+      "text": "Turn the design into a documented system the team can reuse.",
+      "outputs": [
+        "Design tokens",
+        "Component library",
+        "Documentation",
+        "Developer handoff"
+      ]
+    }
+  ],
+  "services": [
+    {
+      "label": "AI Design",
+      "specimen": "ai",
+      "title": "Design with Claude",
+      "text": "I use Claude to build designs from scratch, and I write Claude skills that make my design work faster and more consistent. You get more ideas, sooner, with a designer reviewing every detail.",
+      "deliverables": [
+        "Designs built from scratch with Claude",
+        "Custom Claude skills for design tasks",
+        "Fast prototypes to test ideas early",
+        "AI-assisted research and UX writing"
+      ]
+    },
+    {
+      "label": "UX Flow",
+      "specimen": "flow",
+      "title": "UX Research & Flows",
+      "text": "Understand users first, then map every path before any pixels.",
+      "deliverables": [
+        "User interviews",
+        "Personas",
+        "User flows and flow charts",
+        "Low-fi wireframes"
+      ]
+    },
+    {
+      "label": "UI Kit",
+      "specimen": "ui",
+      "title": "UI for Apps & Websites",
+      "text": "Clear, consistent interfaces for mobile apps, web apps, dashboards and websites.",
+      "deliverables": [
+        "Mobile app UI (iOS, Android)",
+        "Web apps and dashboards",
+        "Websites built in Framer",
+        "Websites and redesigns",
+        "Clickable prototypes"
+      ]
+    },
+    {
+      "label": "DS Docs",
+      "specimen": "ds",
+      "title": "Design Systems & Documentation",
+      "text": "A single source of truth in Figma: tokens, components and the documentation that explains how to use them.",
+      "deliverables": [
+        "Colour, type and spacing tokens",
+        "Components with variants and states",
+        "Usage documentation for every component",
+        "Handoff guidelines for developers"
+      ]
+    }
+  ],
+  "servicesNote": "Take one service or combine them. The first call to talk about your project is free.",
+  "marquee": [
+    "UX Research",
+    "User Flows",
+    "UI Design",
+    "Design Systems",
+    "Documentation",
+    "Mobile Apps",
+    "Framer Websites",
+    "Websites",
+    "Design × Claude"
+  ],
+  "reviews": [
+    {
+      "rating": "5.0",
+      "count": 19
+    }
+  ],
+  "testimonials": [
+    {
+      "quote": "نجلاء متميزة جدا تعاملت مع كتير ناس لكن صدقا ما يميزها سرعتها بالرد واعطائي اكثر من فكرة وجودة عالية ساتعامل معها مرة اخرى وأنصح الجميع التعامل معها",
+      "name": "Ahmed R.",
+      "role": "Project owner · Logo design",
+      "lang": "ar",
+      "rating": 5
+    },
+    {
+      "quote": "Very good freelancer. She was very friendly and patience and she designed all as i want. I can only recommend her.",
+      "name": "jlwessely",
+      "role": "Project owner · 8 projects, Germany",
+      "rating": 5
+    },
+    {
+      "quote": "ممتازة جدا ومتعاونة لأبعد حد،، أنصح بشدة بالتعامل معها لمن أراد العمل المتقن... نموذج مثالي لمن يحب عمله أولا قبل أي شيء آخر",
+      "name": "Diaa M.",
+      "role": "Project owner · Legal consultation app",
+      "lang": "ar",
+      "rating": 5
+    },
+    {
+      "quote": "للمرة الثانية على التوالي اتعامل مع نجلاء سريعة بالرد ومتجاوبة مع التعديلات واعمال رائعة انصح بالتعامل معها",
+      "name": "Ahmed R.",
+      "role": "Project owner · Landing page redesign",
+      "lang": "ar",
+      "rating": 5
+    },
+    {
+      "quote": "Absolutely recommended 100%",
+      "name": "Muhammad Basha M.",
+      "role": "Project owner · Netherlands",
+      "rating": 5
+    }
+  ],
+  "contact": {
+    "headline": "Have a project in mind?",
+    "text": "Tell me about it. I usually reply within a day.",
+    "email": "najlaaouda.88@gmail.com",
+    "whatsapp": "+201204838290",
+    "cv": ""
+  },
+  "socials": {
+    "behance": "",
+    "linkedin": "https://www.linkedin.com/in/najlaaouda88",
+    "github": "https://github.com/najlaaouda",
+    "dribbble": ""
+  },
+  "aboutTitle": "Behind the screens",
+  "aboutFacts": [
+    "Based in Cairo, Egypt",
+    "Mobile & web",
+    "Store-ready designs"
+  ],
+  "experience": [
+    {
+      "period": "Dec 2021 – Present",
+      "role": "Product Designer",
+      "company": "Independent",
+      "text": "Intuitive, responsive products for clients, including a scalable SaaS platform. User journeys, personas and flows, prototypes and mockups, UI turned into HTML, CSS and Bootstrap, and testing before apps go live on the stores."
+    },
+    {
+      "period": "Jan 2020 – May 2023",
+      "role": "Junior UX/UI Designer",
+      "company": "Zad Company, Egypt",
+      "text": "Wireframes for mobile and web, Marvel prototypes, and redesigns of 5 mobile apps to make them easier to use. Designed 7 mobile apps with their web designs, plus App Store and Google Play screenshots."
+    },
+    {
+      "period": "Dec 2019 – Oct 2021",
+      "role": "Junior UI Designer",
+      "company": "SmartSoft, Riyadh",
+      "text": "Redesigned hospital, legal and delivery apps. Designed an online store app with customer, seller and driver roles, landing pages for a delivery app, and three apps and four websites in total."
+    },
+    {
+      "period": "Nov 2018 – Oct 2019",
+      "role": "Graphic & Mobile App Designer",
+      "company": "Independent",
+      "text": "Wireframes and prototypes for mobile apps, alongside brand work such as business cards and social media posts."
+    }
+  ],
+  "heroWords": [
+    "mobile apps",
+    "websites",
+    "dashboards",
+    "design systems",
+    "Framer sites"
+  ],
+  "statement": "I turn messy product ideas into clear, beautiful screens, and the design systems that keep them consistent as they grow."
+}
